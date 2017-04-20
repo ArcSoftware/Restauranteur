@@ -15,14 +15,31 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception{
+        Spark.init();
+
+        orderMenu.add(new Menu(1, "Number 1", "Pizza with a side of fries, and a drink.",
+                6.99, true));
+        orderMenu.add(new Menu(2,"Number 2", "Hamburger with fries and a drink.",
+                6.99, true));
+        orderMenu.add(new Menu(3, "Number 3", "Foot-long Hot Dog with fries and a drink.",
+                5.99, true));
+        orderMenu.add(new Menu(4, "Number 4", "Baked Ziti and a drink.",
+                7.99, true));
+        orderMenu.add(new Menu(5, "Number 5", "Raw meat lathered with gravy.",
+                2.99, true));
 
         System.out.println("Loading Menu Repository.");
-        MenuRepo repo = SaveLoad.loadMenuRepository();
-        tables = repo.activeTables;
+        // MenuRepo repo = SaveLoad.loadMenuRepository();
+        // tables = repo.activeTables;
 
 
         Spark.get("/menu", (req, res) -> {
             System.out.println(orderMenu.size());
+            System.out.println(gsonOut.toJson(orderMenu));
+
+            for(Menu m : orderMenu) {
+                System.out.println(m.toString());
+            }
             return gsonOut.toJson(orderMenu);
         });
 
@@ -46,7 +63,7 @@ public class Main {
                 tables.put(t.tableID, t);
             }
 
-            SaveLoad.saveMenuRepository(new MenuRepo(tables));
+            // SaveLoad.saveMenuRepository(new MenuRepo(tables));
             return "";
         });
 
@@ -57,36 +74,5 @@ public class Main {
         });
 
 
-//        Spark.post("/menu", (req, res) -> {
-//            Menu menuAdd = gsonOut.fromJson(req.body(), Menu.class);
-////            Message message = new JsonParser().parse(req.body(), Message.class); <- to complex
-//            orderMenu.put()
-//
-//            return "";
-//        });
-
-
-
-
-
-//        Spark.get(
-//                "/",
-//                ((request, response) -> {
-//                    HashMap m = new HashMap();
-//                    Session session = request.session();
-//
-//                    String userName = session.attribute("userName");
-//                    User user = users.get(userName);
-//
-//                    if (user == null) {
-//                        return new ModelAndView(m, "index.html");
-//                    } else {
-//                        m.put("name", user.name);
-//                        m.put("messages", messages);
-//                        return new ModelAndView(m, "messages.html");
-//                    }
-//                }),
-//                new MustacheTemplateEngine()
-//        );
     }
 }
