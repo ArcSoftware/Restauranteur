@@ -21,7 +21,6 @@ public class Main {
         tables = repo.activeTables;
 
 
-
         Spark.get("/menu", (req, res) -> {
             System.out.println(orderMenu.size());
             return gsonOut.toJson(orderMenu);
@@ -32,6 +31,7 @@ public class Main {
             String order = req.queryParams("id");
             String body = req.body();
             Table t = gsonOut.fromJson(body, Table.class);
+
             for (int i = 0; i < orderMenu.size(); i++) {
                 Menu orderID = orderMenu.get(i);
 
@@ -39,24 +39,22 @@ public class Main {
                     t.items.add(orderID);
                 }
             }
+
             if (tables.keySet().contains(t.tableID)) {
                 tables.get(t.tableID).items.addAll(t.items);
             } else {
                 tables.put(t.tableID, t);
             }
+
             SaveLoad.saveMenuRepository(new MenuRepo(tables));
             return "";
         });
 
 
         Spark.get("/bill/:tableID", (req, res) -> {
-                    String table = req.queryParams("tableID");
-                    if (tables.keySet().contains(table)) {
-                        return gsonOut.toJson(tables.keySet().equals(table));
-                    } else {
-                        return "";
-                    }
-                });
+            String table = req.queryParams("tableID");
+            return gsonOut.toJson(tables.get(table));
+        });
 
 
 //        Spark.post("/menu", (req, res) -> {

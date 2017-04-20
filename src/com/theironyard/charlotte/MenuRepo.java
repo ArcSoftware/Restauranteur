@@ -7,6 +7,9 @@ import java.util.HashMap;
  * Created by Jake on 4/19/17.
  */
 public class MenuRepo {
+    public MenuRepo() {
+    }
+
     public MenuRepo(HashMap<String, Table> activeTables) {
         this.activeTables = activeTables;
     }
